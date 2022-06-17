@@ -9,7 +9,7 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, 'lists/home.html')
 
     def test_can_save_a_POST_request(self):
-        response = self.client.post('/', data={'item_text': 'A new list item'})
+        self.client.post('/', data={'item_text': 'A new list item'})
 
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
@@ -18,16 +18,12 @@ class HomePageTest(TestCase):
     def test_redirects_after_POST(self):
         response = self.client.post('/', data={'item_text': 'A new list item'})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/the-only-list')
 
-    def test_can_display_multiple_items(self):
-        Item.objects.create(text='First item')
-        Item.objects.create(text='Second item')
+    def test_save_items_only_when_necessary(self):
+        self.client.get('/')
+        self.assertEqual(Item.objects.count(), 0)
 
-        response = self.client.get('/')
-
-        self.assertIn('First item', response.content.decode())
-        self.assertIn('Second item', response.content.decode())
 
 class ItemModelTest(TestCase):
 
@@ -37,7 +33,7 @@ class ItemModelTest(TestCase):
         first_item.save()
 
         second_item = Item()
-        second_item.text ='Item the second!'
+        second_item.text = 'Item the second!'
         second_item.save()
 
         saved_items = Item.objects.all()
@@ -48,6 +44,18 @@ class ItemModelTest(TestCase):
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second!')
 
-    def test_save_items_only_when_necessary(self):
-        self.client.get('/')
-        self.assertEqual(Item.objects.count(), 0)
+
+class ListViewTest(TestCase):
+
+    def test_displays_all_items(self):
+        Item.objects.create(text='Item 1')
+        Item.objects.create(text='Item 2')
+
+        response = self.client.get('/lists/the-only-list')
+
+        self.assertContains(response, 'Item 1')
+        self.assertContains(response, 'Item 2')
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list')
+        self.assertTemplateUsed(response, 'lists/list.html')
