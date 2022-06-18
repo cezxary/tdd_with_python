@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 import time
 
-MAX_WAIT = 10
+MAX_WAIT = 4
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -29,7 +29,6 @@ class NewVisitorTest(LiveServerTestCase):
                     raise e
                 time.sleep(0.5)
 
-    # TODO: remove time.sleeps
     def test_can_start_a_list_and_retrieve_it_later(self):
 
         # Edith has heard about a cool new online to-do app. She goes
