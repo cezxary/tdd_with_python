@@ -17,7 +17,6 @@ from django.urls import include, path
 from lists import views as list_views
 from lists import urls as list_urls
 
-# TODO: similar-looking lists - find a way to refactor duplicates
 urlpatterns = [
     path('', list_views.home_page, name='home'),
     path('lists/', include(list_urls))
