@@ -25,8 +25,7 @@ SECRET_KEY = 'django-key-intentionally-left-insecure-1ub1(h^7!-9!gg%=yrk#y6)q#po
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['tdd-staging.czekaltudlugo.smallhost.pl']
 
 # Application definition
 
