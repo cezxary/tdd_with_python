@@ -11,20 +11,22 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os.path
 from pathlib import Path
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-
-if 'DJANGO_DEBUG_FALSE' in os.environ:
-    DEBUG = False
-    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-    ALLOWED_HOSTS = [os.environ['SITENAME']]
-else:
+# Use the same codebase at development and production by specifying .env file
+try:
+    env_file = open(BASE_DIR / '.env', 'r')
+    environ = json.loads(env_file.read())
+    env_file.close()
+    
+    if 'DJANGO_DEBUG_FALSE' in environ:
+        DEBUG = False
+        SECRET_KEY = environ['DJANGO_SECRET_KEY']
+        ALLOWED_HOSTS = [environ['SITENAME']]
+except FileNotFoundError:
     DEBUG = True
     SECRET_KEY = 'insecure-key-for-dev'
     ALLOWED_HOSTS = []
