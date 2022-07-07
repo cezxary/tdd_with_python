@@ -7,3 +7,4 @@ venv
 *.pdf
 /static
 .env
+*.swp
