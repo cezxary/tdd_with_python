@@ -18,10 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Use the same codebase at development and production by specifying .env file
 try:
-    env_file = open(BASE_DIR / '.env', 'r')
+    env_file = open(BASE_DIR / '.env.json', 'r')
     environ = json.loads(env_file.read())
     env_file.close()
-    
+
     if 'DJANGO_DEBUG_FALSE' in environ:
         DEBUG = False
         SECRET_KEY = environ['DJANGO_SECRET_KEY']
