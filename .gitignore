@@ -6,5 +6,7 @@ venv
 .idea
 *.pdf
 /static
+/public
 .env
 *.swp
+*.txt
