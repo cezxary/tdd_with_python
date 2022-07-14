@@ -2,7 +2,8 @@
 
 {% block header_text %}Your To-Do list{% endblock %}
 
-{% block form_action %}/lists/{{ list.id }}/add_item/{% endblock %}
+<!--TODO: remove hardcoded URLs from list.html and home.html-->
+{% block form_action %}/lists/{{ list.id }}/{% endblock %}
 
 {% block table %}
 <table id="id_list_table" class="table">
