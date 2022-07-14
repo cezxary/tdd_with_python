@@ -10,7 +10,6 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, 'lists/home.html')
 
 
-# TODO: change hardcoded URLs to computed ones
 class ListViewTest(TestCase):
 
     def test_displays_all_items(self):
