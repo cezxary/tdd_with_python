@@ -16,7 +16,6 @@ Including another URLconf
 from django.urls import path
 from lists import views
 
-# TODO: similar-looking lists - find a way to refactor duplicates
 urlpatterns = [
     path('', views.home_page),
     path('new', views.new_list, name='new_list'),
