@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 from lists.models import Item, List
+from lists.forms import ItemForm
 
 
 def home_page(request):
-    return render(request, 'lists/home.html')
+    return render(request, 'lists/home.html', {'form': ItemForm})
 
 
 # TODO: remove duplication of validation logic in views
