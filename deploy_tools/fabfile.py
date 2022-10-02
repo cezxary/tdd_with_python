@@ -1,3 +1,5 @@
+import os
+
 from fabric import Connection, task
 import subprocess
 import random
@@ -45,7 +47,6 @@ def _deploy(c: Connection, site_type):
             _copy_devil_passenger_config(c)
             _update_passenger_config(c)
             _restart_devil_app(c, target_site)
-    print("Please, please don't forget about putting you email password into the .env file")
     c.close()
 
 
@@ -109,6 +110,10 @@ def _create_or_update_dotenv(c, site_name):
 
     create_or_update_sitename = create_or_update_expr.format(f'export SITENAME={site_name}')
     c.run(create_or_update_sitename)
+
+    password = os.environ['RECIPIENT_EMAIL_PASSWORD']
+    create_or_update_test_pw = create_or_update_expr.format(f'export RECIPIENT_EMAIL_PASSWORD={password}')
+    c.run(create_or_update_test_pw)
 
     current_contents = c.run('cat .env').stdout
     if 'DJANGO_SECRET_KEY' not in current_contents:

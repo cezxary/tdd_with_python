@@ -23,5 +23,6 @@ def create_session_on_server(domain, email):
     with c.cd(superlists_dir):
         with c.prefix('source .env'):
             session_key = c.run(f'{PYTHON_LOC} manage.py create_session {email}')
+            c.close()
             print(session_key)
-            return session_key.strip()
+            return session_key.stdout.strip()
