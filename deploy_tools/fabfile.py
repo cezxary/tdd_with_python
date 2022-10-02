@@ -45,6 +45,7 @@ def _deploy(c: Connection, site_type):
             _copy_devil_passenger_config(c)
             _update_passenger_config(c)
             _restart_devil_app(c, target_site)
+    print("Please, please don't forget about putting you email password into the .env file")
     c.close()
 
 
