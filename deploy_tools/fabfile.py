@@ -26,6 +26,7 @@ def deploy_test(c):
 
 
 def _deploy(c: Connection, site_type):
+    print("Please, don't forget to set RECIPIENT_EMAIL_PASSWORD env var")
     target_site = {
         'production': SITENAME_PRODUCTION,
         'test': SITENAME_TEST,
@@ -79,7 +80,7 @@ def _get_latest_source(c):
 
 
 def _update_virtualenv(c):
-    c.run('~/venvs/tdd-django/bin/pip install -r requirements.txt')
+    c.run('~/venvs/tdd-django/bin/pip install `grep -v "selenium" requirements.txt`') # you can modify the command c.run with ( ,warn=True)
 
 
 def _create_or_update_env_var_dotpy(c, site_name):
