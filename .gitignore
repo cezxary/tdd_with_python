@@ -10,3 +10,4 @@ venv
 .env
 *.swp
 *.txt
+functional_tests/screendumps

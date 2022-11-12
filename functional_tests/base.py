@@ -1,3 +1,4 @@
+import datetime
 import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -7,6 +8,9 @@ from selenium.common.exceptions import WebDriverException
 from functional_tests.server_tools import reset_database
 import time
 MAX_WAIT = 4
+SCREEN_DUMP_LOCATION = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'screendumps'
+)
 
 
 def wait(fn):
@@ -33,7 +37,16 @@ class FunctionalTest(StaticLiveServerTestCase):
             reset_database(self.staging_server)
 
     def tearDown(self):
+        if self._test_has_failed():
+            if not os.path.exists(SCREEN_DUMP_LOCATION):
+                os.makedirs(SCREEN_DUMP_LOCATION)
+            for ix, handle in enumerate(self.browser.window_handles):
+                self._windowid = ix
+                self.browser.switch_to.window(handle)
+                self.take_screenshot()
+                self.dump_html()
         self.browser.quit()
+        super().tearDown()
 
     @wait
     def wait_for_row_in_list_table(self, row_text):
@@ -66,3 +79,26 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.get_item_input_box().send_keys(Keys.ENTER)
         item_number = num_rows + 1
         self.wait_for_row_in_list_table(f'{item_number}: {item_text}')
+
+    def _test_has_failed(self):
+        # slightly obscure but book's author couldn't find a better way
+        return any(error for (method, error) in self._outcome.errors)
+
+    def take_screenshot(self):
+        filename = self._get_filename() + '.png'
+        print(f'screenshotting to {filename}')
+        self.browser.get_screenshot_as_file(filename)
+
+    def dump_html(self):
+        filename = self._get_filename() + '.html'
+        print(f'dumping page HTML to {filename}')
+        with open(filename, 'w') as f:
+            f.write(self.browser.page_source)
+
+    def _get_filename(self):
+        timestamp = datetime.datetime.now().isoformat().replace(':', '.')[:19]
+        folder = SCREEN_DUMP_LOCATION
+        classname = self.__class__.__name__
+        method = self._testMethodName
+        windowid = self._windowid
+        return f'{folder}/{classname}.{method}-window{windowid}-{timestamp}'
